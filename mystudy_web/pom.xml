@@ -7,4 +7,11 @@
   </parent>
   <artifactId>mystudy_web</artifactId>
   <packaging>war</packaging>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.study.www</groupId>
+  		<artifactId>mystudy_business</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>

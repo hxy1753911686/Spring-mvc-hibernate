@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"  
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"       
-	xmlns:p="http://www.springframework.org/schema/p"  
-	xmlns:context="http://www.springframework.org/schema/context"   
-	xmlns:tx="http://www.springframework.org/schema/tx"  
-	xmlns:aop="http://www.springframework.org/schema/aop" 
-	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans    
 	http://www.springframework.org/schema/beans/spring-beans.xsd    
 	http://www.springframework.org/schema/aop    
@@ -16,68 +13,93 @@
 	http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/mvc
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd">
-	
+
 	<!-- 包扫描器 -->
 	<context:component-scan base-package="cn.study"></context:component-scan>
-	
+
 	<!-- mvc注解驱动 -->
 	<mvc:annotation-driven></mvc:annotation-driven>
-	
-	<!--视图解析器-->
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/jsp/"></property>
-        <property name="suffix" value=".jsp"></property>
-	
-	 <!--jdbc.properties-->
-    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
-	
-	<!-- 1.dataSource-->
+
+	<!--视图解析器 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<!--jdbc.properties -->
+	<context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+
+	<!-- 1.dataSource -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="${jdbc.driverClassName}" />
 		<property name="jdbcUrl" value="${jdbc.url}" />
 		<property name="user" value="${jdbc.user}" />
 		<property name="password" value="${jdbc.password}" />
 	</bean>
-	
-	<!-- 2.sessionFactory-->
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+
+	<!-- 2.sessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
-		<property name="configLocation" value="classpath:hibernate.cfg.xml"></property>
+		<!-- <property name="configLocation" value="classpath:hibernate.cfg.xml"></property> -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<!-- 这样配置是本地jdbc事务配置,你通过getCurrentSession创建的session会绑定到当前线程 -->
+				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</prop>
+				
+			</props>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>cn.study</value>
+			</list>
+		</property>
 	</bean>
 
-	
-	
-	<!--Shiro安全框架产生代理子类的方式： 使用cglib方式-->
+
+
+	<!--Shiro安全框架产生代理子类的方式： 使用cglib方式 -->
 	<!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->
-	
-	<!-- 3.事务管理器-->
-	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+
+	<!-- 3.事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
-	<!-- 4.txAdvice-->
-	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+	
+	<!-- 事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
+	
+	<!-- 4.txAdvice -->
+	<!-- <tx:advice id="txAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
-			<tx:method name="save*" propagation="REQUIRED"/>
-			<tx:method name="insert*" propagation="REQUIRED"/>
-			<tx:method name="update*" propagation="REQUIRED"/>
-			<tx:method name="delete*" propagation="REQUIRED"/>
-			
-			<tx:method name="get*" read-only="true"/>
-			<tx:method name="*" propagation="REQUIRED"/>
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" />
 		</tx:attributes>
-	</tx:advice>
-	
-	<!-- 5.aop-->
-	<aop:config>
-		<aop:pointcut id="pointcut" expression="execution(* com.school.estimate.service.*.*(..))" />
+	</tx:advice> -->
+
+	<!-- 5.aop -->
+	<!-- <aop:config>
+		<aop:pointcut id="pointcut"
+			expression="execution(* com.school.estimate.service.*.*(..))" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut" />
-	</aop:config>
-	
-	<!--组装其它 配置文件-->
-	<import resource="classpath:spring/applicationContext-action.xml"></import>
+	</aop:config> -->
+
+	<!--组装其它 配置文件 -->
+	<!-- <import resource="classpath:spring/applicationContext-action.xml"></import>
 	<import resource="classpath:spring/applicationContext-dao.xml"></import>
 	<import resource="classpath:spring/applicationContext-service.xml"></import>
-	<import resource="classpath:spring/applicationContext-shiro.xml"></import>
+	<import resource="classpath:spring/applicationContext-shiro.xml"></import> -->
 	<!-- <import resource="classpath:spring/applicationContext-job.xml"></import> -->
-	
+
 </beans>

@@ -5,11 +5,11 @@
     <artifactId>maven-mvc-hibernate</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>mystudy_business</artifactId>
+  <artifactId>mystudy_dao</artifactId>
   <dependencies>
   	<dependency>
   		<groupId>com.study.www</groupId>
-  		<artifactId>mystudy_dao</artifactId>
+  		<artifactId>mystudy_entity</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
   </dependencies>
