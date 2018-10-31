@@ -1,14 +1,18 @@
 package cn.study.entity;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Entity
+
+//@Entity
+@Table(name="dept")
 public class Dept {
 	@Id
-	@GeneratedValue
+	@Column
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer deptno;
 	
 	@Column

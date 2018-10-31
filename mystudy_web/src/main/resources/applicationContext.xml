@@ -15,15 +15,20 @@
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
 	<!-- 包扫描器 -->
-	<context:component-scan base-package="cn.study"></context:component-scan>
+	<context:component-scan base-package="cn.study.controller"></context:component-scan>
 
 	<!-- mvc注解驱动 -->
 	<mvc:annotation-driven></mvc:annotation-driven>
+	
+	<!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
+	<!-- <bean
+        class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    </bean> -->
 
 	<!--视图解析器 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/jsp/"></property>
+		<property name="prefix" value="/WEB-INF/jsps"></property>
 		<property name="suffix" value=".jsp"></property>
 	</bean>
 
@@ -54,6 +59,7 @@
 				
 			</props>
 		</property>
+		<!-- 扫描hibernate注解配置的entity -->
 		<property name="packagesToScan">
 			<list>
 				<value>cn.study</value>
@@ -101,5 +107,15 @@
 	<import resource="classpath:spring/applicationContext-service.xml"></import>
 	<import resource="classpath:spring/applicationContext-shiro.xml"></import> -->
 	<!-- <import resource="classpath:spring/applicationContext-job.xml"></import> -->
-
+	
+	<!-- 以下是springMVC中的配置 -->
+	
+	<!-- 用于使用@ResponseBody后返回中文避免乱码 -->
+    <bean id="utf8Charset" class="java.nio.charset.Charset"
+        factory-method="forName">
+        <constructor-arg value="UTF-8" />
+    </bean>
+    
+    
+    
 </beans>
